@@ -1,0 +1,7 @@
+README.md
+setup.py
+src/jsondatahelper.py
+src/jsondatahelper.egg-info/PKG-INFO
+src/jsondatahelper.egg-info/SOURCES.txt
+src/jsondatahelper.egg-info/dependency_links.txt
+src/jsondatahelper.egg-info/top_level.txt

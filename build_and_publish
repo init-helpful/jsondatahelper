@@ -1,0 +1,2 @@
+/Users/andrewcummings/anaconda3/envs/install_test/bin/python /Users/andrewcummings/Documents/Projects/Personal/jsondatahelper/setup.py bdist_wheel
+twine upload dist/*

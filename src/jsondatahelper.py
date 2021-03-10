@@ -1,4 +1,5 @@
 import json
+
 KEY_SPLIT_CHAR = "->"
 """
 
@@ -39,7 +40,6 @@ B
 """
 
 
-
 def are_all(array, object_type):
     for item in array:
         if not isinstance(item, object_type):
@@ -66,9 +66,9 @@ def flatten(dictionary):
             {"This":"dictionary","Is":"Keyless"},
             {"So":"Is","This":"One"}
         ]
-        
+
         Flattened looks like :
-        
+
             {
                 "Example->0->This":"dictionary",
                 "Example->0->Is":"Keyless",
@@ -109,12 +109,12 @@ def flatten(dictionary):
 def split_for_indexed_values(path):
     """
     split_path : this->is->a->path : ["this","is","a","path"]
-    
+
     found_indexes : [{i0,s0},...,{iN,sN}] where "N" is number of found numeric values in path
 
         i: location in path e.g 0->1->2->...->N : "value"
         s: String representation of index in path
-    
+
     """
     split_path = path.split(KEY_SPLIT_CHAR)
     found_indexes = [
@@ -126,8 +126,8 @@ def split_for_indexed_values(path):
 
 def unflatten(dictionary, save_indexed_values_for_later=False):
     """
-    Function that takes a flattened nested dictionary and reverts it to its original nested state. 
-    
+    Function that takes a flattened nested dictionary and reverts it to its original nested state.
+
     Turns flattened dictionary back into standard format.
 
     Example of flattened dictionary at top of class.
@@ -261,8 +261,29 @@ def purge_empty_dict(dictionary):
         return dictionary
 
 
-def standardize_for_storage(dictionary):
-    pass
+def clean_for_storage(dictionary, remove_empty_values=False):
+    """
+    Makes all Values in {Key:Value} pairs a string,
+    so there are no conversion or formating issues
+    when json file is written to.
+
+    E.g. [Datetime -> String] To prevent json serialization errors.
+    """
+    flattend_standardized = {}
+    for key, val in flatten(dictionary).items():
+        # if isinstance(val, datetime.datetime):
+        #     flattend_standardized[key] = val.isoformat(sep='T', timespec='milliseconds')
+        if isinstance(val, bytes):
+            flattend_standardized[key] = "b'" + val.hex()
+        else:
+            flattend_standardized[key] = str(val)
+
+    clean_dictionary = unflatten(flattend_standardized)
+
+    if remove_empty_values:
+        clean_dictionary = purge_empty_dict(clean_dictionary)
+
+    return clean_dictionary
 
 
 __all__ = [
@@ -272,7 +293,5 @@ __all__ = [
     "find_value",
     "find_all",
     "format_dict",
-    "slice_dict"
-    "search_with_default"
-    "purge_empty_dict",
+    "slice_dict" "search_with_default" "purge_empty_dict",
 ]

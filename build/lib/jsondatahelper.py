@@ -124,6 +124,21 @@ def split_for_indexed_values(path):
     return split_path, found_indexes
 
 
+def subpath_value(path_dictionary, desired_key, exclude_key_in_val=True):
+
+    split_path = list(path_dictionary.keys())[0].split(KEY_SPLIT_CHAR)
+    path_value = list(path_dictionary.values())[0]
+    desired_key_idx = split_path.index(desired_key)
+    last_idx = len(split_path)
+
+    if exclude_key_in_val:
+        desired_key_idx = desired_key_idx + 1
+
+    return unflatten(
+        {KEY_SPLIT_CHAR.join(split_path[desired_key_idx:last_idx]): path_value}
+    )
+
+
 def unflatten(dictionary, save_indexed_values_for_later=False):
     """
     Function that takes a flattened nested dictionary and reverts it to its original nested state.
